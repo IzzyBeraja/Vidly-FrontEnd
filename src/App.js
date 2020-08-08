@@ -1,12 +1,12 @@
-import React from 'react';
-import './App.css';
-import Movie from './components/movie'
+import React from "react";
+import "./App.css";
+import Movies from "./components/movies";
 
 function App() {
   return (
-      <main className="container">
-          <Movie />
-      </main>
+    <main className="container">
+      <Movies />
+    </main>
   );
 }
 
