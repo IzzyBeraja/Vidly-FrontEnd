@@ -14,6 +14,7 @@ const ListGroup = props => {
               (selectedItem[textProperty] === item[textProperty] && "active")
             }
             onClick={() => onItemSelect(item)}
+            style={{ cursor: "pointer" }}
           >
             {item[textProperty]}
           </li>
