@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import Movie from "./movie";
 import Pagination from "./common/pagination";
 import { paginate } from "../utils/paginate";
 import ListGroup from "./common/listGroup";
 import { getGenres } from "../services/fakeGenreService";
 import { getMovies } from "../services/fakeMovieService";
+import MovieTable from "./movieTable";
 
-class Movies extends Component {
+class MoviesMenu extends Component {
   state = {
     movies: [],
     genres: [],
@@ -70,23 +70,7 @@ class Movies extends Component {
             <ListGroup selectedItem={selectedGenre} items={genres} onItemSelect={this.handleGenreSelect} />
           </div>
           <div className="col">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>Genre</th>
-                  <th>Stock</th>
-                  <th>Rate</th>
-                  <th></th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {movies.map(m => {
-                  return <Movie key={m._id} movie={m} onLike={this.handleLikeStatus} onDelete={this.handleDelete} />;
-                })}
-              </tbody>
-            </table>
+            <MovieTable movies={movies} onLike={this.handleLikeStatus} onDelete={this.handleDelete} />
           </div>
         </div>
         <div className="row">
@@ -104,4 +88,4 @@ class Movies extends Component {
   }
 }
 
-export default Movies;
+export default MoviesMenu;
