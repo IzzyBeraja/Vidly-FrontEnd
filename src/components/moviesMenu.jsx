@@ -5,6 +5,7 @@ import ListGroup from "./common/listGroup";
 import { getGenres } from "../services/fakeGenreService";
 import { getMovies } from "../services/fakeMovieService";
 import MovieTable from "./movieTable";
+import _ from "lodash";
 
 class MoviesMenu extends Component {
   state = {
@@ -13,10 +14,11 @@ class MoviesMenu extends Component {
     currentPage: 1,
     itemsPerPage: 4,
     selectedGenre: "",
+    sortColumn: { path: "title", order: "asc" },
   };
 
   componentDidMount() {
-    const genres = [{ name: "All Genres", _id: 0 }, ...getGenres()];
+    const genres = [{ name: "All Genres", _id: "" }, ...getGenres()];
     const selectedGenre = genres[0];
     this.setState({ movies: getMovies(), genres, selectedGenre });
   }
@@ -42,19 +44,33 @@ class MoviesMenu extends Component {
     this.setState({ selectedGenre: genre, currentPage: 1 });
   };
 
+  handleSort = path => {
+    const { sortColumn } = this.state;
+    const order = sortColumn.path === path && sortColumn.order === "asc" ? "desc" : "asc";
+    this.setState({ sortColumn: { path, order } });
+  };
+
   render() {
     // Movies
     const { length: count } = this.state.movies;
-    // Pagination
-    const { itemsPerPage, currentPage, movies: allMovies } = this.state;
-    // Filters
-    const { selectedGenre, genres } = this.state;
+    const {
+      // Pagination
+      itemsPerPage,
+      currentPage,
+      movies: allMovies,
+      // Filters
+      selectedGenre,
+      genres,
+    } = this.state;
+    // Sorting
+    const { path, order } = this.state.sortColumn;
 
     // No Movies
     if (count === 0) return <p className="text-center">There are no movies in the database.</p>;
     const filtered =
       selectedGenre && selectedGenre._id ? allMovies.filter(m => m.genre._id === selectedGenre._id) : allMovies;
-    const movies = paginate(filtered, currentPage, itemsPerPage);
+    const sorted = _.orderBy(filtered, [path], order);
+    const movies = paginate(sorted, currentPage, itemsPerPage);
 
     return (
       <div className="container">
@@ -70,7 +86,12 @@ class MoviesMenu extends Component {
             <ListGroup selectedItem={selectedGenre} items={genres} onItemSelect={this.handleGenreSelect} />
           </div>
           <div className="col">
-            <MovieTable movies={movies} onLike={this.handleLikeStatus} onDelete={this.handleDelete} />
+            <MovieTable
+              movies={movies}
+              onLike={this.handleLikeStatus}
+              onDelete={this.handleDelete}
+              onSort={this.handleSort}
+            />
           </div>
         </div>
         <div className="row">
