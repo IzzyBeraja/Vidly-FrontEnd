@@ -4,7 +4,7 @@ import { paginate } from "../utils/paginate";
 import ListGroup from "./common/listGroup";
 import { getGenres } from "../services/fakeGenreService";
 import { getMovies } from "../services/fakeMovieService";
-import MovieTable from "./movieTable";
+import MoviesTable from "./moviesTable";
 import _ from "lodash";
 
 class MoviesMenu extends Component {
@@ -44,10 +44,8 @@ class MoviesMenu extends Component {
     this.setState({ selectedGenre: genre, currentPage: 1 });
   };
 
-  handleSort = path => {
-    const { sortColumn } = this.state;
-    const order = sortColumn.path === path && sortColumn.order === "asc" ? "desc" : "asc";
-    this.setState({ sortColumn: { path, order } });
+  handleSort = sortColumn => {
+    this.setState({ sortColumn });
   };
 
   render() {
@@ -61,15 +59,15 @@ class MoviesMenu extends Component {
       // Filters
       selectedGenre,
       genres,
+      // Sorting
+      sortColumn,
     } = this.state;
-    // Sorting
-    const { path, order } = this.state.sortColumn;
 
     // No Movies
     if (count === 0) return <p className="text-center">There are no movies in the database.</p>;
     const filtered =
       selectedGenre && selectedGenre._id ? allMovies.filter(m => m.genre._id === selectedGenre._id) : allMovies;
-    const sorted = _.orderBy(filtered, [path], order);
+    const sorted = _.orderBy(filtered, [sortColumn.path], sortColumn.order);
     const movies = paginate(sorted, currentPage, itemsPerPage);
 
     return (
@@ -86,8 +84,9 @@ class MoviesMenu extends Component {
             <ListGroup selectedItem={selectedGenre} items={genres} onItemSelect={this.handleGenreSelect} />
           </div>
           <div className="col">
-            <MovieTable
+            <MoviesTable
               movies={movies}
+              sortColumn={sortColumn}
               onLike={this.handleLikeStatus}
               onDelete={this.handleDelete}
               onSort={this.handleSort}
