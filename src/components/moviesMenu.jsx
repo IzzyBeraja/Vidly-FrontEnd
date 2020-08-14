@@ -48,9 +48,7 @@ class MoviesMenu extends Component {
     this.setState({ sortColumn });
   };
 
-  render() {
-    // Movies
-    const { length: count } = this.state.movies;
+  getPageData = () => {
     const {
       // Pagination
       itemsPerPage,
@@ -58,24 +56,42 @@ class MoviesMenu extends Component {
       movies: allMovies,
       // Filters
       selectedGenre,
+      // Sorting
+      sortColumn,
+    } = this.state;
+
+    const filtered =
+      selectedGenre && selectedGenre._id ? allMovies.filter(m => m.genre._id === selectedGenre._id) : allMovies;
+    const sorted = _.orderBy(filtered, [sortColumn.path], sortColumn.order);
+    const movies = paginate(sorted, currentPage, itemsPerPage);
+
+    return { totalCount: filtered.length, data: movies };
+  };
+
+  render() {
+    // Movies
+    const { length: count } = this.state.movies;
+    const {
+      // Pagination
+      itemsPerPage,
+      currentPage,
+      // Filters
+      selectedGenre,
       genres,
       // Sorting
       sortColumn,
     } = this.state;
 
-    // No Movies
     if (count === 0) return <p className="text-center">There are no movies in the database.</p>;
-    const filtered =
-      selectedGenre && selectedGenre._id ? allMovies.filter(m => m.genre._id === selectedGenre._id) : allMovies;
-    const sorted = _.orderBy(filtered, [sortColumn.path], sortColumn.order);
-    const movies = paginate(sorted, currentPage, itemsPerPage);
+
+    const { totalCount, data } = this.getPageData();
 
     return (
       <div className="container">
         <div className="row">
           <div className="col">
             <p className="text-center">
-              Showing {movies.length} of {filtered.length} movies in the database.
+              Showing {data.length} of {totalCount} movies in the database.
             </p>
           </div>
         </div>
@@ -85,7 +101,7 @@ class MoviesMenu extends Component {
           </div>
           <div className="col">
             <MoviesTable
-              movies={movies}
+              movies={data}
               sortColumn={sortColumn}
               onLike={this.handleLikeStatus}
               onDelete={this.handleDelete}
@@ -96,7 +112,7 @@ class MoviesMenu extends Component {
         <div className="row">
           <div className="col">
             <Pagination
-              itemsCount={filtered.length}
+              itemsCount={totalCount}
               itemsPerPage={itemsPerPage}
               currentPage={currentPage}
               onPageChange={this.handlePageChange}
