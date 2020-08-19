@@ -9,17 +9,17 @@ const NavBar = () => {
       </Link>
       <ul className="navbar-nav mr-auto">
         <li className="navbar-item">
-          <NavLink className="nav-link" to="/Movies">
+          <NavLink className="nav-link" to="/movies">
             Movies
           </NavLink>
         </li>
         <li className="navbar-item">
-          <NavLink className="nav-link" to="/Customers">
+          <NavLink className="nav-link" to="/customers">
             Customers
           </NavLink>
         </li>
         <li className="navbar-item">
-          <NavLink className="nav-link" to="/Rentals">
+          <NavLink className="nav-link" to="/rentals">
             Rentals
           </NavLink>
         </li>
