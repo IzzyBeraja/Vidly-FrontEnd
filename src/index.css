@@ -10,8 +10,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-.container {
-  padding: 20px 0 0 0;
+.navbar {
+  margin-bottom: 30px;
 }
 
 .clickable {
