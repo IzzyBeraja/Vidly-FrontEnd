@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import MoviesMenu from "./components/moviesMenu";
 import Customers from "./components/customers";
 import Rentals from "./components/rentals";
@@ -10,7 +10,7 @@ import "./App.css";
 class App extends Component {
   render() {
     return (
-      <React.Fragment>
+      <Router>
         <NavBar />
         <main className="container">
           <Switch>
@@ -22,7 +22,7 @@ class App extends Component {
             <Redirect to="/notFound" />
           </Switch>
         </main>
-      </React.Fragment>
+      </Router>
     );
   }
 }
