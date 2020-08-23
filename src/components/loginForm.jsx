@@ -8,14 +8,17 @@ class LoginForm extends Component {
     errors: {},
   };
 
-  schema = Joi.object({
+  schema = {
     username: Joi.string().required().label("Username"),
     password: Joi.string().required().label("Password"),
-  });
+  };
 
   validate = () => {
     const options = { abortEarly: false };
-    const { error } = this.schema.validate(this.state.account, options);
+    const { error } = Joi.object(this.schema).validate(
+      this.state.account,
+      options
+    );
     if (!error) return null;
 
     const errors = {};
@@ -25,19 +28,35 @@ class LoginForm extends Component {
     return errors;
   };
 
+  validateProperty = ({ name, value }) => {
+    const obj = { [name]: value };
+    const schema = Joi.object({ [name]: this.schema[name] });
+    console.log(this.schema.single(obj));
+    const { error } = schema.validate(obj);
+
+    return error ? error.details[0].message : null;
+  };
+
   handleSubmit = e => {
-    e.preventDefault();
+    e.preventDefault(); // Prevents call to server
 
     const errors = this.validate();
     this.setState({ errors: errors || {} });
     if (errors) return;
+
     console.log("Submitted");
   };
 
   handleChange = ({ currentTarget: input }) => {
+    const errors = { ...this.state.errors };
+    const errorMessage = this.validateProperty(input);
+    if (errorMessage) errors[input.name] = errorMessage;
+    else delete errors[input.name];
+
     const account = { ...this.state.account };
     account[input.name] = input.value;
-    this.setState({ account });
+
+    this.setState({ account, errors });
   };
 
   render() {
@@ -61,7 +80,9 @@ class LoginForm extends Component {
             onChange={this.handleChange}
             error={errors.password}
           />
-          <button className="btn btn-primary">Login</button>
+          <button disabled={this.validate()} className="btn btn-primary">
+            Login
+          </button>
         </form>
       </div>
     );
