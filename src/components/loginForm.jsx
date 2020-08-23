@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Joi from "joi";
 import Input from "./common/input";
 
 class LoginForm extends Component {
@@ -7,24 +8,28 @@ class LoginForm extends Component {
     errors: {},
   };
 
+  schema = Joi.object({
+    username: Joi.string().required().label("Username"),
+    password: Joi.string().required().label("Password"),
+  });
+
   validate = () => {
+    const options = { abortEarly: false };
+    const { error } = this.schema.validate(this.state.account, options);
+    if (!error) return null;
+
     const errors = {};
-
-    const { account } = this.state;
-    if (account.username.trim() === "")
-      errors.username = "Username is required.";
-    if (account.password.trim() === "")
-      errors.password = "Password is required.";
-
-    return Object.keys(errors).length === 0 ? null : errors;
+    error.details.forEach(item => {
+      errors[item.path[0]] = item.message;
+    });
+    return errors;
   };
 
   handleSubmit = e => {
     e.preventDefault();
 
     const errors = this.validate();
-    console.log(errors);
-    this.setState({ errors });
+    this.setState({ errors: errors || {} });
     if (errors) return;
     console.log("Submitted");
   };
@@ -36,7 +41,7 @@ class LoginForm extends Component {
   };
 
   render() {
-    const { account } = this.state;
+    const { account, errors } = this.state;
 
     return (
       <div>
@@ -47,12 +52,14 @@ class LoginForm extends Component {
             label="Username"
             value={account.username}
             onChange={this.handleChange}
+            error={errors.username}
           />
           <Input
             name="password"
             label="Password"
             value={account.password}
             onChange={this.handleChange}
+            error={errors.password}
           />
           <button className="btn btn-primary">Login</button>
         </form>
