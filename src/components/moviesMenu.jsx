@@ -6,6 +6,7 @@ import { getGenres } from "../services/fakeGenreService";
 import { getMovies } from "../services/fakeMovieService";
 import MoviesTable from "./moviesTable";
 import _ from "lodash";
+import { Link } from "react-router-dom";
 
 class MoviesMenu extends Component {
   state = {
@@ -61,7 +62,9 @@ class MoviesMenu extends Component {
     } = this.state;
 
     const filtered =
-      selectedGenre && selectedGenre._id ? allMovies.filter(m => m.genre._id === selectedGenre._id) : allMovies;
+      selectedGenre && selectedGenre._id
+        ? allMovies.filter(m => m.genre._id === selectedGenre._id)
+        : allMovies;
     const sorted = _.orderBy(filtered, [sortColumn.path], sortColumn.order);
     const movies = paginate(sorted, currentPage, itemsPerPage);
 
@@ -82,7 +85,10 @@ class MoviesMenu extends Component {
       sortColumn,
     } = this.state;
 
-    if (count === 0) return <p className="text-center">There are no movies in the database.</p>;
+    if (count === 0)
+      return (
+        <p className="text-center">There are no movies in the database.</p>
+      );
 
     const { totalCount, data } = this.getPageData();
 
@@ -97,7 +103,14 @@ class MoviesMenu extends Component {
         </div>
         <div className="row">
           <div className="col-2">
-            <ListGroup selectedItem={selectedGenre} items={genres} onItemSelect={this.handleGenreSelect} />
+            <Link className="btn btn-primary my-2" to="/movies/new">
+              Add New Movie
+            </Link>
+            <ListGroup
+              selectedItem={selectedGenre}
+              items={genres}
+              onItemSelect={this.handleGenreSelect}
+            />
           </div>
           <div className="col">
             <MoviesTable
