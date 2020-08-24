@@ -7,6 +7,7 @@ import { getMovies } from "../services/fakeMovieService";
 import MoviesTable from "./moviesTable";
 import _ from "lodash";
 import { Link } from "react-router-dom";
+import SearchBox from "./common/searchBox";
 
 class MoviesMenu extends Component {
   state = {
@@ -15,6 +16,7 @@ class MoviesMenu extends Component {
     currentPage: 1,
     itemsPerPage: 4,
     selectedGenre: "",
+    searchQuery: "",
     sortColumn: { path: "title", order: "asc" },
   };
 
@@ -42,11 +44,15 @@ class MoviesMenu extends Component {
   };
 
   handleGenreSelect = genre => {
-    this.setState({ selectedGenre: genre, currentPage: 1 });
+    this.setState({ selectedGenre: genre, currentPage: 1, search: "" });
   };
 
   handleSort = sortColumn => {
     this.setState({ sortColumn });
+  };
+
+  handleSearch = searchQuery => {
+    this.setState({ searchQuery, selectedGenre: "", currentPage: 1 });
   };
 
   getPageData = () => {
@@ -59,12 +65,17 @@ class MoviesMenu extends Component {
       selectedGenre,
       // Sorting
       sortColumn,
+      searchQuery,
     } = this.state;
 
-    const filtered =
-      selectedGenre && selectedGenre._id
-        ? allMovies.filter(m => m.genre._id === selectedGenre._id)
-        : allMovies;
+    let filtered = allMovies;
+    if (selectedGenre && selectedGenre._id)
+      filtered = allMovies.filter(m => m.genre._id === selectedGenre._id);
+    else if (searchQuery)
+      filtered = allMovies.filter(m =>
+        m.title.toUpperCase().includes(searchQuery.toUpperCase())
+      );
+
     const sorted = _.orderBy(filtered, [sortColumn.path], sortColumn.order);
     const movies = paginate(sorted, currentPage, itemsPerPage);
 
@@ -83,6 +94,7 @@ class MoviesMenu extends Component {
       genres,
       // Sorting
       sortColumn,
+      searchQuery,
     } = this.state;
 
     if (count === 0)
@@ -113,6 +125,7 @@ class MoviesMenu extends Component {
             />
           </div>
           <div className="col">
+            <SearchBox value={searchQuery} onChange={this.handleSearch} />
             <MoviesTable
               movies={data}
               sortColumn={sortColumn}
