@@ -18,15 +18,15 @@ class MovieForm extends Form {
   };
 
   schema = {
-    _id: Joi.string(),
-    title: Joi.string().required().label("Title"),
-    genreId: Joi.string().required().label("Genre"),
+    _id: Joi.string().allow(""),
+    title: Joi.string().label("Title"),
+    genreId: Joi.string().label("Genre"),
     numberInStock: Joi.number()
       .min(0)
       .max(100)
-      .required()
+
       .label("Number In Stock"),
-    dailyRentalRate: Joi.number().min(0).max(10).required().label("Rate"),
+    dailyRentalRate: Joi.number().min(0).max(10).label("Rate"),
   };
 
   componentDidMount() {
