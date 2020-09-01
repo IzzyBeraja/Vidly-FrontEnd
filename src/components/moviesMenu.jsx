@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Pagination from "./common/pagination";
 import { paginate } from "../utils/paginate";
 import ListGroup from "./common/listGroup";
-import { getGenres } from "../services/fakeGenreService";
+import { getGenres } from "../services/genreService";
 import { getMovies } from "../services/fakeMovieService";
 import MoviesTable from "./moviesTable";
 import _ from "lodash";
@@ -20,8 +20,9 @@ class MoviesMenu extends Component {
     sortColumn: { path: "title", order: "asc" },
   };
 
-  componentDidMount() {
-    const genres = [{ name: "All Genres", _id: "" }, ...getGenres()];
+  async componentDidMount() {
+    const { data } = await getGenres();
+    const genres = [{ name: "All Genres", id: "" }, ...data];
     const selectedGenre = genres[0];
     this.setState({ movies: getMovies(), genres, selectedGenre });
   }
