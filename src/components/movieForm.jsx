@@ -7,7 +7,7 @@ import { saveMovie, getMovie } from "../services/fakeMovieService";
 class MovieForm extends Form {
   state = {
     data: {
-      _id: "",
+      id: "",
       title: "",
       genreId: "",
       numberInStock: "",
@@ -18,7 +18,7 @@ class MovieForm extends Form {
   };
 
   schema = {
-    _id: Joi.string().allow(""),
+    id: Joi.string().allow(""),
     title: Joi.string().label("Title"),
     genreId: Joi.string().label("Genre"),
     numberInStock: Joi.number()
@@ -44,9 +44,9 @@ class MovieForm extends Form {
 
   mapToViewModel = movie => {
     return {
-      _id: movie._id,
+      id: movie.id,
       title: movie.title,
-      genreId: movie.genre._id,
+      genreId: movie.genre.id,
       numberInStock: movie.numberInStock,
       dailyRentalRate: movie.dailyRentalRate,
     };

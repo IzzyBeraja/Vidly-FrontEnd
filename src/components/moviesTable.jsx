@@ -9,19 +9,27 @@ class MoviesTable extends Component {
       key: "title",
       path: "title",
       label: "Title",
-      content: movie => <Link to={`/movies/${movie._id}`}>{movie.title}</Link>,
+      content: movie => <Link to={`/movies/${movie.id}`}>{movie.title}</Link>,
     },
     { key: "genre.name", path: "genre.name", label: "Genre" },
     { key: "numberInStock", path: "numberInStock", label: "Stock" },
     { key: "dailyRentalRate", path: "dailyRentalRate", label: "Rate" },
     {
       key: "like",
-      content: movie => <LikeButton liked={movie.liked} onClick={() => this.props.onLike(movie)}></LikeButton>,
+      content: movie => (
+        <LikeButton
+          liked={movie.liked}
+          onClick={() => this.props.onLike(movie)}
+        ></LikeButton>
+      ),
     },
     {
       key: "delete",
       content: movie => (
-        <button className="btn btn-danger btn-sm" onClick={() => this.props.onDelete(movie)}>
+        <button
+          className="btn btn-danger btn-sm"
+          onClick={() => this.props.onDelete(movie)}
+        >
           Delete
         </button>
       ),
@@ -30,7 +38,14 @@ class MoviesTable extends Component {
 
   render() {
     const { movies, sortColumn, onSort } = this.props;
-    return <Table columns={this.columns} sortColumn={sortColumn} onSort={onSort} data={movies} />;
+    return (
+      <Table
+        columns={this.columns}
+        sortColumn={sortColumn}
+        onSort={onSort}
+        data={movies}
+      />
+    );
   }
 }
 

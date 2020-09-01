@@ -8,7 +8,7 @@ const Select = ({ name, label, options, error, ...rest }) => {
         <option />
         {options &&
           options.map(o => (
-            <option key={o._id} value={o._id}>
+            <option key={o.id} value={o.id}>
               {o.name}
             </option>
           ))}

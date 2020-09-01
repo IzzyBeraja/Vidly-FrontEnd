@@ -3,7 +3,7 @@ import Pagination from "./common/pagination";
 import { paginate } from "../utils/paginate";
 import ListGroup from "./common/listGroup";
 import { getGenres } from "../services/genreService";
-import { getMovies } from "../services/fakeMovieService";
+import { getMovies } from "../services/movieService";
 import MoviesTable from "./moviesTable";
 import _ from "lodash";
 import { Link } from "react-router-dom";
@@ -21,22 +21,23 @@ class MoviesMenu extends Component {
   };
 
   async componentDidMount() {
-    const { data } = await getGenres();
-    const genres = [{ name: "All Genres", id: "" }, ...data];
+    const { data: genreData } = await getGenres();
+    const { data: movieData } = await getMovies();
+    const genres = [{ name: "All Genres", id: "" }, ...genreData];
     const selectedGenre = genres[0];
-    this.setState({ movies: getMovies(), genres, selectedGenre });
+    this.setState({ movies: movieData, genres, selectedGenre });
   }
 
   handleLikeStatus = movie => {
     const movies = [...this.state.movies].map(({ ...m }) => {
-      if (m._id === movie._id) m.liked = !movie.liked;
+      if (m.id === movie.id) m.liked = !movie.liked;
       return m;
     });
     this.setState({ movies });
   };
 
   handleDelete = movie => {
-    const movies = this.state.movies.filter(m => m._id !== movie._id);
+    const movies = this.state.movies.filter(m => m.id !== movie.id);
     this.setState({ movies });
   };
 
@@ -70,8 +71,8 @@ class MoviesMenu extends Component {
     } = this.state;
 
     let filtered = allMovies;
-    if (selectedGenre && selectedGenre._id)
-      filtered = allMovies.filter(m => m.genre._id === selectedGenre._id);
+    if (selectedGenre && selectedGenre.id)
+      filtered = allMovies.filter(m => m.genre.id === selectedGenre.id);
     else if (searchQuery)
       filtered = allMovies.filter(m =>
         m.title.toUpperCase().includes(searchQuery.toUpperCase())
