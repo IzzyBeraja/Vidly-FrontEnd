@@ -2,12 +2,14 @@ import { getGenres } from "./genreService";
 import httpService from './httpService'
 import config from "./config.json"
 
+const movieDefaultRoute = `${config.apiEndpoint}/Movies`;
+
 export function getMovies() {
-  return httpService.get(`${config.apiEndpoint}/Movie`);
+    return httpService.get(movieDefaultRoute);
 }
 
 export function getMovie(id) {
-  return httpService.get(`${config.apiEndpoint}/Movie/${id}`);;
+    return httpService.get(`${movieDefaultRoute}/${id}`);;
 }
 
 export function saveMovie(movie) {
@@ -18,9 +20,9 @@ export function saveMovie(movie) {
         'dailyRentalRate': movie.dailyRentalRate
     }
 
-    return httpService.post(`${config.apiEndpoint}/Movie`, payload)
+    return httpService.post(movieDefaultRoute, payload)
 }
 
 export function deleteMovie(id) {
-  return httpService.delete(`${config.apiEndpoint}/Movie/${id}`);
+    return httpService.delete(`${movieDefaultRoute}/${id}`);
 }
