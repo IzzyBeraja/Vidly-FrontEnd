@@ -3,7 +3,7 @@ import Pagination from "./common/pagination";
 import { paginate } from "../utils/paginate";
 import ListGroup from "./common/listGroup";
 import { getGenres } from "../services/genreService";
-import { getMovies } from "../services/movieService";
+import { getMovies, deleteMovie } from "../services/movieService";
 import MoviesTable from "./moviesTable";
 import _ from "lodash";
 import { Link } from "react-router-dom";
@@ -36,9 +36,19 @@ class MoviesMenu extends Component {
     this.setState({ movies });
   };
 
-  handleDelete = movie => {
-    const movies = this.state.movies.filter(m => m.id !== movie.id);
+  handleDelete = async movie => {
+    const originalMovies = this.state.movies;
+    const movies = originalMovies.filter(m => m.id !== movie.id);
     this.setState({ movies });
+
+    try {
+      await deleteMovie(movie.id);
+    } catch (error) {
+      if (error.response && error.response.status === 404)
+        alert("This movie has already been deleted");
+
+      this.setState({ movies: originalMovies });
+    }
   };
 
   handlePageChange = page => {
