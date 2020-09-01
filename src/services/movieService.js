@@ -2,27 +2,32 @@ import { getGenres } from "./genreService";
 import http from "./httpService";
 import { apiEndpoint } from "./config.json";
 
-const movieUrl = `${apiEndpoint}/Movies`;
+const serviceUrl = `${apiEndpoint}/Movies`;
+
+function movieUrl(id) {
+  return `${serviceUrl}/${id}`;
+}
 
 export function getMovies() {
-  return http.get(movieUrl);
+  return http.get(serviceUrl);
 }
 
 export function getMovie(id) {
-  return http.get(`${movieUrl}/${id}`);
+  return http.get(movieUrl(id));
 }
 
-export function saveMovie(movie) {
-  const payload = {
-    title: movie.title,
-    genre: getGenres().filter(g => g.id === movie.genreId),
-    numberInStock: movie.numberInStock,
-    dailyRentalRate: movie.dailyRentalRate,
-  };
+export async function saveMovie(movie) {
+  const { data: genres } = await getGenres();
 
-  return http.post(movieUrl, payload);
+  const body = { ...movie };
+  delete body.id;
+  body.genre = genres.find(g => g.id === movie.genreId);
+
+  return movie.id
+    ? http.put(movieUrl(movie.id), body)
+    : http.post(serviceUrl, body);
 }
 
 export function deleteMovie(id) {
-  return http.delete(`${movieUrl}/${id}`);
+  return http.delete(movieUrl(id));
 }
