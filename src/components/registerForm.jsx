@@ -20,12 +20,16 @@ class RegisterForm extends Form {
 
   doSubmit = async () => {
     try {
-      await register(this.state.data);
+      const response = await register(this.state.data);
       console.log("Registration successful");
+      console.log({ response });
     } catch (ex) {
+      console.log({ ex });
       if (ex.response && ex.response.status === 400) {
         const errors = { ...this.state.errors };
-        errors.email = ex.response.data;
+        errors.email =
+          ex.response.data.errors.email ||
+          ex.response.data.errors.email.first();
         this.setState({ errors });
       }
     }
