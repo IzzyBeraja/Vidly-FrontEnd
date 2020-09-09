@@ -5,6 +5,8 @@ import { apiEndpoint } from "./config.json";
 const serviceUrl = `${apiEndpoint}/Auth`;
 const tokenKey = "token";
 
+http.setJwt(getJwt());
+
 export async function login(email, password) {
   const { headers: jwt } = await http.post(serviceUrl, { email, password });
   localStorage.setItem(tokenKey, jwt["x-auth-token"]);
