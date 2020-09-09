@@ -12,6 +12,7 @@
     "bootstrap": "^4.5.2",
     "joi": "^17.2.1",
     "jquery": "^3.5.1",
+    "jwt-decode": "^2.2.0",
     "lodash": "^4.17.20",
     "node": "^14.8.0",
     "prop-types": "^15.7.2",
