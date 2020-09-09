@@ -109,6 +109,8 @@ class MoviesMenu extends Component {
       searchQuery,
     } = this.state;
 
+    const { user } = this.props;
+
     if (count === 0)
       return (
         <p className="text-center">There are no movies in the database.</p>
@@ -127,9 +129,11 @@ class MoviesMenu extends Component {
         </div>
         <div className="row">
           <div className="col-2">
-            <Link className="btn btn-primary my-2" to="/movies/new">
-              Add New Movie
-            </Link>
+            {user && (
+              <Link className="btn btn-primary my-2" to="/movies/new">
+                Add New Movie
+              </Link>
+            )}
             <ListGroup
               selectedItem={selectedGenre}
               items={genres}
