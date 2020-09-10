@@ -1,8 +1,7 @@
 import http from "./httpService";
 import jwtDecode from "jwt-decode";
-import { apiEndpoint } from "./config.json";
 
-const serviceUrl = `${apiEndpoint}/Auth`;
+const serviceUrl = "/Auth";
 const tokenKey = "token";
 
 http.setJwt(getJwt());
