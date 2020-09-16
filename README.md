@@ -34,5 +34,6 @@ I will be posting a link to a working API backend when it is properly configured
 
 ## Current known issues
 
-- Removal of token when it has expired
-- Handling calls when token has expired
+- Expired tokens are not removed
+- Database shows "No Movies" message as it loads data from database
+- Like button data does not get sent to database
