@@ -4,7 +4,7 @@ import LikeButton from "./common/like";
 import { Link } from "react-router-dom";
 import auth from "../services/authService";
 
-function MoviesTable(props) {
+function MoviesTable({ onDelete, onLike, onSort, movies, sortColumn }) {
   const [columns, setColumns] = useState([]);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ function MoviesTable(props) {
         content: movie => (
           <LikeButton
             liked={movie.liked}
-            onClick={() => props.onLike(movie)}
+            onClick={() => onLike(movie)}
           ></LikeButton>
         ),
       },
@@ -34,7 +34,7 @@ function MoviesTable(props) {
       content: movie => (
         <button
           className="btn btn-danger btn-sm"
-          onClick={() => props.onDelete(movie)}
+          onClick={() => onDelete(movie)}
         >
           Delete
         </button>
@@ -42,9 +42,7 @@ function MoviesTable(props) {
     };
     if (user && user.role === "Admin") columns.push(deleteColumn);
     setColumns(columns);
-  }, []);
-
-  const { movies, sortColumn, onSort } = props;
+  }, [onLike, onDelete]);
 
   return (
     <Table
