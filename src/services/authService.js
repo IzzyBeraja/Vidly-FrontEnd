@@ -21,8 +21,15 @@ export function logout() {
 
 export function getCurrentUser() {
   try {
-    const jwt = localStorage.getItem(tokenKey);
-    return jwtDecode(jwt);
+    const jwt = getJwt();
+    const jwtDecoded = jwtDecode(jwt);
+    console.log(jwtDecoded.exp * 1000, Date.now());
+    if(jwtDecoded && Date.now() > jwtDecoded.exp*1000)
+    {
+        logout();
+        return null;
+    }
+    return jwtDecoded;
   } catch (ex) {}
   return null;
 }
