@@ -7,7 +7,7 @@ import auth from "../services/authService";
 function MoviesTable(props) {
   const [columns, setColumns] = useState([]);
 
-  useEffect(props => {
+  useEffect(() => {
     const user = auth.getCurrentUser();
     const columns = [
       {
