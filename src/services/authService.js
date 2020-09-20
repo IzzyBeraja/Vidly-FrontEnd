@@ -23,7 +23,6 @@ export function getCurrentUser() {
   try {
     const jwt = getJwt();
     const jwtDecoded = jwtDecode(jwt);
-    console.log(jwtDecoded.exp * 1000, Date.now());
     if(jwtDecoded && Date.now() > jwtDecoded.exp*1000)
     {
         logout();

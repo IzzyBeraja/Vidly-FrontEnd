@@ -16,6 +16,7 @@ import Logout from "./components/logout";
 import RegisterForm from "./components/registerForm";
 import auth from "./services/authService";
 import ProtectedRoute from "./components/common/protectedRoute";
+import UserContext from "./context/userContext";
 import "./App.css";
 
 class App extends Component {
@@ -30,24 +31,26 @@ class App extends Component {
 
     return (
       <Router>
-        <NavBar user={user} />
-        <main className="container">
-          <Switch>
-            <Route path="/register" component={RegisterForm} />
-            <Route path="/login" component={LoginForm} />
-            <Route path="/logout" component={Logout} />
-            <ProtectedRoute path="/movies/:id" component={MovieForm} />
-            <Route
-              path="/movies"
-              render={props => <MoviesMenu {...props} user={user} />}
-            />
-            <Route path="/customers" component={Customers} />
-            <Route path="/rentals" component={Rentals} />
-            <Route path="/notFound" component={NotFound} />
-            <Redirect from="/" exact to="/movies" />
-            <Redirect to="/notFound" />
-          </Switch>
-        </main>
+        <UserContext.Provider value={user}>
+          <NavBar />
+          <main className="container">
+            <Switch>
+              <Route path="/register" component={RegisterForm} />
+              <Route path="/login" component={LoginForm} />
+              <Route path="/logout" component={Logout} />
+              <ProtectedRoute path="/movies/:id" component={MovieForm} />
+              <Route
+                path="/movies"
+                render={props => <MoviesMenu {...props}/>}
+              />
+              <Route path="/customers" component={Customers} />
+              <Route path="/rentals" component={Rentals} />
+              <Route path="/notFound" component={NotFound} />
+              <Redirect from="/" exact to="/movies" />
+              <Redirect to="/notFound" />
+            </Switch>
+          </main>
+        </UserContext.Provider>
       </Router>
     );
   }

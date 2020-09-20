@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import UserContext from "../context/userContext";
 import Pagination from "./common/pagination";
 import { paginate } from "../utils/paginate";
 import ListGroup from "./common/listGroup";
@@ -27,7 +28,6 @@ function MoviesMenu(props) {
       setMovies(movieData);
       setSelectedGenre(genres[0]);
     }
-
     fetchData();
   }, []);
 
@@ -92,7 +92,7 @@ function MoviesMenu(props) {
 
   // Movies
   const { length: count } = movies;
-  const { user } = props;
+  const user = useContext(UserContext);
 
   if (count === 0)
     return <p className="text-center">There are no movies in the database.</p>;
